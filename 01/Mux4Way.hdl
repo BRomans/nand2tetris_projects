@@ -1,0 +1,26 @@
+// This chip is used as part of the Mux4Way16 chip
+
+/**
+ * 4-way multiplexor:
+ * out = a if sel == 00
+ *       b if sel == 01
+ *       c if sel == 10
+ *       d if sel == 11
+ */
+
+CHIP Mux4Way {
+    IN a, b, c, d, sel[2];
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Not(in=sel[0], out=notSel0);
+    Not(in=sel[1], out=notSel1);
+
+    And3Way(a=notSel0, b=notSel1, c=a, out=aAnd);
+    And3Way(a=sel[0], b=notSel1, c=b, out=bAnd);
+    And3Way(a=notSel0, b=sel[1], c=c, out=cAnd);
+    And3Way(a=sel[0], b=sel[1], c=d, out=dAnd);
+    Or4Way(a=aAnd, b=bAnd, c=cAnd, d=dAnd, out=out);
+    
+}

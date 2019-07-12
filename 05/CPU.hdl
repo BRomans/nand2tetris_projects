@@ -1,0 +1,77 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/05/CPU.hdl
+
+/**
+ * The Hack CPU (Central Processing unit), consisting of an ALU,
+ * two registers named A and D, and a program counter named PC.
+ * The CPU is designed to fetch and execute instructions written in 
+ * the Hack machine language. In particular, functions as follows:
+ * Executes the inputted instruction according to the Hack machine 
+ * language specification. The D and A in the language specification
+ * refer to CPU-resident registers, while M refers to the external
+ * memory location addressed by A, i.e. to Memory[A]. The inM input 
+ * holds the value of this location. If the current instruction needs 
+ * to write a value to M, the value is placed in outM, the address 
+ * of the target location is placed in the addressM output, and the 
+ * writeM control bit is asserted. (When writeM==0, any value may 
+ * appear in outM). The outM and writeM outputs are combinational: 
+ * they are affected instantaneously by the execution of the current 
+ * instruction. The addressM and pc outputs are clocked: although they 
+ * are affected by the execution of the current instruction, they commit 
+ * to their new values only in the next time step. If reset==1 then the 
+ * CPU jumps to address 0 (i.e. pc is set to 0 in next time step) rather 
+ * than to the address resulting from executing the current instruction. 
+ */
+
+CHIP CPU {
+
+    IN  inM[16],         // M value input  (M = contents of RAM[A])
+        instruction[16], // Instruction for execution
+        reset;           // Signals whether to re-start the current
+                         // program (reset==1) or continue executing
+                         // the current program (reset==0).
+
+    OUT outM[16],        // M value output
+        writeM,          // Write to M? 
+        addressM[15],    // Address in data memory (of M)
+        pc[15];          // address of next instruction
+
+    PARTS:
+    // Put your code here:
+    // ARegister part
+    Mux16(a=instruction, b=ALUout, sel=instruction[15], out=Iout); // first mux uses the op_code=instruction[15]  to decode the instruction type
+    Not(in=instruction[15], out=Aoperation);
+    Not(in=Aoperation, out=Coperation);
+    Or(a=Aoperation, b=instruction[5], out=InA);  // compute if it's an A instruction or has the d-bit set
+    ARegister(in=Iout, load=InA, out=Aout, out[0..14]=addressM); // ARegister outputs the addreess in the first 14 bits
+   
+    // DRegister part
+    And(a=Coperation, b=instruction[4], out=InD);    // decode if it's a C instruction and has the d-bit set
+    DRegister(in=ALUout, load=InD, out=Dout);
+   
+    // ALU part
+    And(a=instruction[12], b=Coperation, out=aANDm);
+    Mux16(a=Aout, b=inM, sel=aANDm, out=AMout); // second Mux uses a_bit=instruction[3] to decode what to send to the ALU
+    ALU(x=Dout, y=AMout, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=outM, out=ALUout, zr=zr, ng=ng); // the ALU takes the computed values of D and A and the 6 c-bits
+    And(a=Coperation, b=instruction[3], out=writeM); // writeM if it's a C instruction and the first d-bit is set
+
+    // instructions part
+    Nand(a=ng, b=zr, out=ngNANDzr); // we AND the ALU outputs ng and zr and negate the result
+    And(a=Coperation, b=instruction[0], out=JGT);    // if it's a C op and first j-bit is 1 then JGT
+    And(a=Coperation, b=instruction[1], out=JEQ);    // if it's a C op and second j-bit is 1 then JEQ
+    And(a=Coperation, b=instruction[2], out=JLT);    // if it's a C op and third j-bit is 1 then JLT
+    
+    // PC part 
+    // calculate all possible combinations between ALU outs and C-instruction
+    Or(a=ng, b=zr, out=ngORzr);
+    Not(in=ngORzr, out=NOTngOrzr);
+    And(a=NOTngOrzr, b=JGT, out=PCload1); // if not 0 and not negative and JGT then jump
+    And(a=zr, b=JEQ, out=PCload2);  // if 0 and JEQ then jump
+    And(a=ng, b=JLT, out=PCload3);  // if negative and JLT then jump
+
+    Or(a=PCload1, b=PCload2, out=PCloadPart); 
+    Or(a=PCload3, b=PCloadPart, out=PCload);  // calculate the final PC load
+    PC(in=Aout, load=PCload, inc=true, reset=reset, out[0..14]=pc);    // inc is always true to have the PC++ functionality, takes Aout as input and apply the result of the calculated operations
+}

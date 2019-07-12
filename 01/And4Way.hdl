@@ -1,0 +1,18 @@
+// This chip is used as part of the DMux8Way chip
+
+
+/**
+ * 4 Way And:
+ * a And b And c And d
+ */
+
+CHIP And4Way {
+    IN a, b, c, d;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    And(a=a, b=b, out=aAndb);
+    And(a=c, b=aAndb, out=aAndbAndc);
+    And(a=d, b=aAndbAndc, out=out);
+}

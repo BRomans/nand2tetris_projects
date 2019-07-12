@@ -1,0 +1,18 @@
+// This chip is used as part of the Mux4Way16 chip
+
+/**
+ * 4-way Or: 
+ * a Or b Or c Or d
+ */
+
+CHIP Or4Way {
+    IN a, b, c, d;
+    OUT out;
+
+    PARTS:
+    // Put your code here:
+    Or(a=a, b=b, out=aOrb);
+    Or(a=c, b=aOrb, out=aOrbOrc);
+    Or(a=d, b=aOrbOrc, out=out);
+    
+}
