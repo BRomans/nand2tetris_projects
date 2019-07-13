@@ -23,6 +23,8 @@ def init_symbol_table(symbol_table, parser, hack_program):
         jump = ''
         command_type = parser.command_type(command)
         print("*** Parsing Command ***\n", command + " " + command_type)
+
+
         if command_type == "C_COMMAND":
             dest = parser.dest(command)
             comp = parser.comp(command)
