@@ -2,6 +2,9 @@
 
 class Code:
 
+    def __init__(self):
+        return
+
     ''' Returns the binary code of the dest mnemonic '''
     def dest(self, mnemonic):
         return

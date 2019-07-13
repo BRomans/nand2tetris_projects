@@ -1,11 +1,9 @@
+import re
+
 class Parser:
 
-    hack_program = ''
-
-    def __new__(cls, file):
-        with open(file, 'r') as file_text:
-            hack_program = file_text.read()
-            print("Parsing:\n", hack_program)
+    def __init__(self, hack_program):
+        print("*** Parsing Program ***\n", hack_program)
 
     ''' Returns true if the input has more commands, else false'''
     def has_more_commands(self):
@@ -18,26 +16,74 @@ class Parser:
         return
 
     ''' Returns the type of the current command - A_COMMAND, C_COMMAND, L_COMMAND '''
-    def commandType(self, command):
-
-        print("Command Type test")
-        return
+    def command_type(self, command):
+        try:
+            if re.match(r'^@(\S)*', command):
+                return "A_COMMAND"
+            elif re.match(r'^\((\S*)\)$', command):
+                return "L_COMMAND"
+            elif re.match(r'^[A-Z=](\S*)(;\S*)?', command) or re.match(r'^(\S*)(;\S*)', command):
+                return "C_COMMAND"
+            else:
+                raise SyntaxError
+        except SyntaxError:
+            print("*** Unreadable Command ***\n", command)
 
     ''' Returns the symbol or decimal Xxx of the current command. Only for A and L commands '''
-    def symbol(self):
-        print("Symbol test")
-        return
+    def symbol(self, command):
+        if self.command_type(command) == "A_COMMAND":
+            return command.split("@")[1]
+        elif self.command_type(command) == "L_COMMAND":
+            return command.split("(")[1].split(")")[0]
+        else:
+            return command
 
     ''' Returns the dest mnemonic in the current C-command. Only for C commands '''
-    def dest(self):
-        print("Dest test")
-        return
+    def dest(self, command):
+        if "=" in command:
+            dest = command.split("=")[0]
+            return dest
+        else:
+            return ""
 
     ''' Returns the comp mnemonic in the current C-command. Only for C commands '''
-    def comp(self):
-        print("Comp test")
+    def comp(self, command):
+        if "=" in command:
+            command_no_dest = command.split("=")[1]
+            if ";" in command:
+                comp = command_no_dest.split(";")[0]
+                return comp
+            else:
+                return command_no_dest
 
     ''' Returns the jump mnemonic in the current C-command. Only for C commands '''
-    def jump(self):
-        print("Jump test")
+    def jump(self, command):
+        if ";" in command:
+            jump = command.split(";")[1]
+            return jump
+        else:
+            return ""
+
+    def cleanup_empty_lines(self, hack_program):
+        hack_program_filtered = list()
+        for line in hack_program:
+            if not re.match(r'^\s*$', line):
+                hack_program_filtered.append(line)
+        return hack_program_filtered
+
+    def cleanup_empty_spaces(self, hack_program):
+        hack_program_filtered = list()
+        for line in hack_program:
+            line = line.replace(" ", "")
+            line = line.strip()
+            hack_program_filtered.append(line)
+        return hack_program_filtered
+
+    def cleanup_comments(self, hack_program):
+        hack_program_filtered = list()
+        for line in hack_program:
+            if not line.startswith("//"):
+                no_comments = line.split("//")[0]
+                hack_program_filtered.append(no_comments)
+        return hack_program_filtered
 
