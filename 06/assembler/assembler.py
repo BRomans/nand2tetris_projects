@@ -12,19 +12,28 @@ def main():
         code = Code()
         symbol_table = SymbolTable()
         with open(argument, 'r') as hack_program:
-            hack_program = parser.cleanup_empty_lines(hack_program)
-            hack_program = parser.cleanup_empty_spaces(hack_program)
-            hack_program = parser.cleanup_comments(hack_program)
-            for command in hack_program:
-                dest = ''
-                comp = ''
-                jump = ''
-                command_type = parser.command_type(command)
-                print("*** Parsing Command ***\n", command + " " + command_type)
-                if command_type == "C_COMMAND":
-                    dest = parser.dest(command)
-                    comp = parser.comp(command)
-                    jump = parser.jump(command)
+            hack_program = cleanup_commands(parser, hack_program)
+            init_symbol_table(symbol_table, parser, hack_program)
+
+
+def init_symbol_table(symbol_table, parser, hack_program):
+    for command in hack_program:
+        dest = ''
+        comp = ''
+        jump = ''
+        command_type = parser.command_type(command)
+        print("*** Parsing Command ***\n", command + " " + command_type)
+        if command_type == "C_COMMAND":
+            dest = parser.dest(command)
+            comp = parser.comp(command)
+            jump = parser.jump(command)
+
+
+def cleanup_commands(parser, hack_program):
+    hack_program = parser.cleanup_empty_lines(hack_program)
+    hack_program = parser.cleanup_empty_spaces(hack_program)
+    hack_program = parser.cleanup_comments(hack_program)
+    return hack_program
 
 
 main()
