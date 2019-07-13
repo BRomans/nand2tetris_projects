@@ -37,11 +37,11 @@ class SymbolTable:
     ''' Adds the pair symbol/address to the table '''
     def add_entry(self, symbol, address):
         self.table[symbol] = address
-        print("*** Registered symbol {" + symbol + "} with address {" + address + "} ***")
+        print("*** Registered symbol {" + symbol + "} with address {" + str(address) + "} ***")
 
     ''' Returns True if the symbol is contained in the table, else False'''
     def contains(self, symbol):
-        if self.table[symbol] is not None:
+        if self.table.__contains__(symbol):
             return True
         else:
             return False
@@ -50,3 +50,4 @@ class SymbolTable:
     def get_address(self, symbol):
         print("*** Fetching address of symbol {" + symbol + "} ***")
         return self.table[symbol]
+

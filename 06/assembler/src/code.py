@@ -3,7 +3,7 @@
 class Code:
 
     def __init__(self):
-        print("*** Init Code ***\n")
+        print("*** Init Code ***")
         self.comp = {
             "0": "101010",
             "1": "111111",

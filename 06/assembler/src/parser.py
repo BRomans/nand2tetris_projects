@@ -65,6 +65,7 @@ class Parser:
         else:
             return "null"
 
+    ''' Removes empty lines from the Hack program '''
     def cleanup_empty_lines(self, hack_program):
         hack_program_filtered = list()
         for line in hack_program:
@@ -72,6 +73,7 @@ class Parser:
                 hack_program_filtered.append(line)
         return hack_program_filtered
 
+    ''' Removes empty spaces between characters from the Hack program '''
     def cleanup_empty_spaces(self, hack_program):
         hack_program_filtered = list()
         for line in hack_program:
@@ -80,6 +82,7 @@ class Parser:
             hack_program_filtered.append(line)
         return hack_program_filtered
 
+    ''' Removes inline comments from the Hack program '''
     def cleanup_comments(self, hack_program):
         hack_program_filtered = list()
         for line in hack_program:
