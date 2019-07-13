@@ -1,5 +1,11 @@
 class Parser:
 
+    hack_program = ''
+
+    def __new__(cls, file):
+        with open(file, 'r') as file_text:
+            hack_program = file_text.read()
+            print("Parsing:\n", hack_program)
 
     ''' Returns true if the input has more commands, else false'''
     def has_more_commands(self):
@@ -12,7 +18,8 @@ class Parser:
         return
 
     ''' Returns the type of the current command - A_COMMAND, C_COMMAND, L_COMMAND '''
-    def commandType(self):
+    def commandType(self, command):
+
         print("Command Type test")
         return
 
