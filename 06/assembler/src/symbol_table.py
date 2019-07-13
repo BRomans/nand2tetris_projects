@@ -2,13 +2,12 @@
 
 class SymbolTable:
 
-    table = dict()
+
 
     ''' Create a new empty symbol table '''
     def __init__(self):
+        self.table = dict()
         print("*** New Symbol Table instance created ***")
-
-
 
     ''' Adds the pair symbol/address to the table '''
     def add_entry(self, symbol, address):

@@ -1,5 +1,6 @@
 import re
 
+
 class Parser:
 
     def __init__(self, hack_program):
@@ -44,7 +45,7 @@ class Parser:
             dest = command.split("=")[0]
             return dest
         else:
-            return ""
+            return "null"
 
     ''' Returns the comp mnemonic in the current C-command. Only for C commands '''
     def comp(self, command):
@@ -62,7 +63,7 @@ class Parser:
             jump = command.split(";")[1]
             return jump
         else:
-            return ""
+            return "null"
 
     def cleanup_empty_lines(self, hack_program):
         hack_program_filtered = list()
