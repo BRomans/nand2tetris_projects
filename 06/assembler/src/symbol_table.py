@@ -2,8 +2,6 @@
 
 class SymbolTable:
 
-
-
     ''' Create a new empty symbol table '''
     def __init__(self):
         self.table = {

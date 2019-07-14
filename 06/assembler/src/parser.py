@@ -56,6 +56,9 @@ class Parser:
                 return comp
             else:
                 return command_no_dest
+        else:
+            comp = command.split(";")[0]
+            return comp
 
     ''' Returns the jump mnemonic in the current C-command. Only for C commands '''
     def jump(self, command):
