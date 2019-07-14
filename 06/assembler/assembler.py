@@ -22,37 +22,40 @@ def main():
 
 
 def init_labels(symbol_table, parser, hack_program):
-    address_n = 16
+    address_n = 0
     for command in hack_program:
         command_type = parser.command_type(command)
         # print("*** Parsing Command ***\n", command + " " + command_type)
         if command_type == "L_COMMAND":
             command = command.split("(")[1].split(")")[0]
-            symbol_table.add_entry(command, address_n + 1 )
+            symbol_table.add_entry(command, address_n)
         else:
             address_n += 1
 
 
 def process_translation(symbol_table, code, parser, hack_program, file_name):
     address_n = 16
-    file_output = open("output/" + file_name + ".hack", "w")
+    file_output = open("output/" + file_name + ".hack", "w", encoding='utf-8')
     for command in hack_program:
         command_type = parser.command_type(command)
         # print("*** Parsing Command ***\n", command + " " + command_type)
         if command_type == "A_COMMAND":
             command = command.split("@")[1]
-            if not command.isdigit():
+            if command.isdigit():
+                command = int(command)
+                b_address = bin(command)[2:].zfill(15)
+                file_output.write("0" + b_address + "\n")
+            else:
                 if symbol_table.contains(command):
                     command = int(symbol_table.get_address(command))
-                    b_address = format(command, "015b")
+                    b_address = bin(command)[2:].zfill(15)
                     print("Writing A instruction: " + "0" + b_address + "\n")
                     file_output.write("0" + b_address + "\n")
                 else:
                     symbol_table.add_entry(command, address_n)
-            else:
-                command = int(command)
-                b_address = format(command, "015b")
-                file_output.write("0" + b_address + "\n")
+                    b_address_n = bin(address_n)[2:].zfill(15)
+                    file_output.write("0" + b_address_n + "\n")
+                    address_n += 1
 
         if command_type == "C_COMMAND":
             dest = parser.dest(command)
@@ -64,7 +67,6 @@ def process_translation(symbol_table, code, parser, hack_program, file_name):
             print("Writing C instruction: " + "111" +  b_comp + b_dest + b_jump + "\n")
             file_output.write("111" + b_comp + b_dest + b_jump + "\n")
 
-        address_n += 1
     file_output.close()
 
 
