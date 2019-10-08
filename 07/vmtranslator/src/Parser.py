@@ -3,20 +3,25 @@ class Parser:
 
     def __init__(self, input_file):
         print("*** Parsing Program ***\n", input_file)
+        self.inputFile = open(input_file, 'r')
+        self.remainingLines = len(open(input_file, 'r').readlines())
+        self.currentCommand = ""
 
     ''' Returns true if the input has more commands, else false'''
     def has_more_commands(self):
         print("Has More Commands test")
-        return True
+        return self.remainingLines != 0
 
     ''' Read the next command from input and makes it the current command. 
-        SHould be called only if has_more_command is true. Initially there
+        Should be called only if has_more_command is true. Initially there
         is no current command.'''
     def advance(self):
         print("Advance test")
+        self.currentCommand = self.inputFile.readline()
+        self.remainingLines -= 1
         return
 
-    ''' Returns a costant representing the type of the current command.
+    ''' Returns a constant representing the type of the current command.
         C_ARITHMETIC is returned for all the arithmetic/logical commands'''
     def command_type(self):
         return
