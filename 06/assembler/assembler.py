@@ -35,7 +35,7 @@ def init_labels(symbol_table, parser, hack_program):
 
 def process_translation(symbol_table, code, parser, hack_program, file_name):
     address_n = 16
-    file_output = open("output/" + file_name + ".hack", "w", encoding='utf-8')
+    file_output = open("assembler/output/" + file_name + ".hack", "w", encoding='utf-8')
     for command in hack_program:
         command_type = parser.command_type(command)
         # print("*** Parsing Command ***\n", command + " " + command_type)
