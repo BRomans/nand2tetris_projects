@@ -18,8 +18,11 @@ class CommandsTable:
             "pop": ""
         }
 
-    def get_arithmetic_table(self):
-        return self.arithmeticTable
+    def contains_arithmetic_symbol(self, symbol):
+        return symbol in self.arithmeticTable
+
+    def get_arithmetic_symbol(self, symbol):
+        return self.arithmeticTable[symbol]
 
     def get_mem_acc_table(self):
         return self.memoryAccessTable
