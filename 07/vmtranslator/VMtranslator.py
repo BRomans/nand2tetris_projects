@@ -8,6 +8,7 @@ from src.CommandsTable import CommandsTable
 def main():
 
     argument = sys.argv[1]
-    parser = Parser(argument)
+    commands_table = CommandsTable
+    parser = Parser(argument, commands_table)
     while parser.has_more_commands():
         parser.advance()

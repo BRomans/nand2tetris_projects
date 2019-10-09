@@ -17,3 +17,10 @@ class CommandsTable:
             "push": "",
             "pop": ""
         }
+
+    def get_arithmetic_table(self):
+        return self.arithmeticTable
+
+    def get_mem_acc_table(self):
+        return self.memoryAccessTable
+
