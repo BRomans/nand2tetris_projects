@@ -1,0 +1,10 @@
+/** Initializes the Turkey game and starts running it. */
+class Main {
+    function void main() {
+        var LetterWarsGame game;
+        let game = LetterWarsGame.new();
+        do game.run();
+        do game.dispose();
+        return;
+    }
+}
