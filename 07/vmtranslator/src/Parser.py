@@ -45,16 +45,16 @@ class Parser:
     def arg1(self):
         if len(self.currentCommandParts) > 0:
             if self.command_type() == "C_ARITHMETIC":
-                return self.currentCommandParts[0]
+                return self.currentCommandParts[0].strip()
             if self.command_type() == "C_PUSH" or self.command_type() == "C_POP":
-                return self.currentCommandParts[1]
+                return self.currentCommandParts[1].strip()
 
     ''' Returns the second argument of the current command. Should be called
             only if the current command is C_PUSH, C_POP, C_FUNCTION or C_CALL'''
     def arg2(self):
         if len(self.currentCommandParts) > 0:
             if self.command_type() == "C_PUSH" or self.command_type() == "C_POP":
-                return self.currentCommandParts[2]
+                return self.currentCommandParts[2].strip()
             else:
                 return ""
 

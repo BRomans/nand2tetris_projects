@@ -7,9 +7,9 @@ from src.CommandsTable import CommandsTable
 
 
 def main():
-    code_writer = CodeWriter()
+    commands_table = CommandsTable()
+    code_writer = CodeWriter(commands_table)
     for argument in sys.argv[1:]:
-        commands_table = CommandsTable()
         code_writer.set_file(argument)
         parser = Parser(argument, commands_table)
         while parser.has_more_commands():

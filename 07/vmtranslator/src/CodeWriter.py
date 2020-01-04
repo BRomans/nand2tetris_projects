@@ -3,8 +3,9 @@ import os
 
 class CodeWriter:
 
-    def __init__(self):
+    def __init__(self, commands_table):
         self.outputFile = None
+        self.commandsTable = commands_table
 
     ''' Opens the output file and gets ready to write into it '''
     def set_file(self, output_file):
@@ -22,9 +23,18 @@ class CodeWriter:
         where command is either C_POP or C_PUSH'''
     def write_push_pop(self, command, segment, index):
         print("*** Writing push/pop command ***")
-        self.outputFile.write("// " + command + " " + segment + " " + index)
+        self.outputFile.write("// " + command + " " + segment + " " + index + "\n")
+        self.write_a(index)
+        self.outputFile.write(self.commandsTable.get_memory_symbol(segment))
+        self.outputFile.write(os.linesep)
 
     ''' Closes the output file '''
     def close(self):
         self.outputFile.close()
+
+    def write_a(self, index):
+        self.outputFile.write("@" + index + "\n")
+
+    def write_c(self):
+        return
 
